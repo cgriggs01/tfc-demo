@@ -71,7 +71,6 @@ steps:
           }
         }
       }
-      EOF
 
   - run:
       name: Create a Configuration Version

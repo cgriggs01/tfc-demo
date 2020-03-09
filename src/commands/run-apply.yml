@@ -47,7 +47,7 @@ steps:
       name: Create data package with commit message
       shell: /bin/bash
       command: |
-        cat << "EOF" >> apply_payload.json
+        cat << EOF >> apply_payload.json
         {
           "commit": "<< parameter.message >>"
         }

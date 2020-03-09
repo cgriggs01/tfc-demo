@@ -57,7 +57,7 @@ steps:
       shell: /bin/bash
       command: |
 
-        tar -zcf "packaged_config.tar.gz" -C "<< paramter.configuration_path >>" .
+        tar -zcf "packaged_config.tar.gz" -C "<< parameter.configuration_path >>" .
 
   - run:
       name: Create data package configuration version
@@ -77,18 +77,19 @@ steps:
       command: |
 
         config_version=$(curl -- silent \
-          --header "Authorization: Bearer << parameters.token >>" \
+          --header "Authorization: Bearer << parameter.token >>" \
           --header "Content-Type: application/vnd.api+json" \
           --request POST \
           --data @payload.json \
-          "<< parameter.endpoint >>"/api/v2/workspaces/<< parameters.workspace_id >>/configuration-versions
+          "<< parameter.endpoint >>"/api/v2/workspaces/<< parameter.workspace_id >>/configuration-versions
 
         upload_url=$(echo "$config_version" | jq -r '.data.attributes."upload-url"')
         config_id=$(echo "$config_version" | jq -r '.data.id')
 
 
-        export CONFIG_ID="$config_id"
-        export UPLOAD_URL="$upload_url"
+        echo 'export CONFIG_ID=$config_id' >> $BASH_ENV
+        echo 'export UPLOAD_URL=$upload_url' >> $BASH_ENV
+        source $BASH_ENV
 
   - run:
       name: Upload a Configuration File
@@ -116,7 +117,7 @@ steps:
               "workspace": {
                 "data": {
                   "type": "workspaces",
-                  "id": "<< parameters.workspace_id >>"
+                  "id": "<< parameter.workspace_id >>"
                 }
               },
               "configuration-version": {
@@ -142,4 +143,5 @@ steps:
           | jq -r '.data.id'
           )
 
-        export RUN_ID="$run_id"
+        echo 'export RUN_ID=$run_id' >> $BASH_ENV
+        source $BASH_ENV

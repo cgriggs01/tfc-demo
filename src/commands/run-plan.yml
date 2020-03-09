@@ -143,4 +143,4 @@ steps:
           | jq -r '.data.id'
           )
 
-       export RUN_ID="$run_id"
+        export RUN_ID="$run_id"

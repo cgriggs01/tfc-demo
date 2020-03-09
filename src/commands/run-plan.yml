@@ -73,7 +73,7 @@ steps:
         }
       EOF
 
-  - run: 
+  - run:
       name: Create a Configuration Version
       command: |
 

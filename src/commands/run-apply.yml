@@ -18,7 +18,7 @@ parameters:
 
   is-destroy:
     description: Specifies if this plan is a destroy plan, which will destroy all provisioned resources.
-    type: bool
+    type: boolean
     default: false
 
   configuration-version:
@@ -42,19 +42,19 @@ steps:
         rm curl_exists
 
   - run:
-    name: Create data package with commit message
-    command: |
-      cat << EOF >> apply_payload.json
-      {
-        "commit": "<< parameter.message >>"
-      }
+      name: Create data package with commit message
+      command: |
+        cat << EOF >> apply_payload.json
+        {
+          "commit": "<< parameter.message >>"
+        }
 
   - run:
-    name: Apply a Run
-    command: |
-      curl \
-        --header "Authorization: Bearer << parameter.token >>" \
-        --header "Content-Type: application/vnd.api+json" \
-        --request POST \
-        --data @payload.json \
-        << parameters.endpoint >>/api/v2/runs/"$RUN_ID"/actions/apply
+      name: Apply a Run
+      command: |
+        curl \
+          --header "Authorization: Bearer << parameter.token >>" \
+          --header "Content-Type: application/vnd.api+json" \
+          --request POST \
+          --data @payload.json \
+          << parameters.endpoint >>/api/v2/runs/"$RUN_ID"/actions/apply

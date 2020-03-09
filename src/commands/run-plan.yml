@@ -62,7 +62,7 @@ steps:
   - run:
       name: Create data package configuration version
       command: |
-        cat << EOF >> payload.json
+        cat \<< EOF >> payload.json
         {
           "data": {
             "type": "configuration-versions",
@@ -105,7 +105,7 @@ steps:
   - run:
       name: Create data package for triggering run/plan
       command: |
-        cat << EOF >> run_payload.json
+        cat \<< EOF >> run_payload.json
         {
           "data": {
             "attributes": {

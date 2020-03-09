@@ -27,7 +27,7 @@ parameters:
     default: ${TFC_CONFIGURATION_PATH}
 
   endpoint:
-    description: The URL of the Terraform Cloud 
+    description: The URL of the Terraform Cloud
     type: string
     default: "https://app.terraform.io"
 
@@ -56,7 +56,7 @@ steps:
       name: Package Terraform Configuration in URL
       shell: /bin/bash
       command: |
-      
+
         tar -zcf "packaged_config.tar.gz" -C "<< paramter.configuration_path >>" .
 
   - run:
@@ -71,7 +71,7 @@ steps:
             }
           }
         }
-      EOF      
+      EOF
 
   - run: 
       name: Create a Configuration Version
@@ -84,7 +84,6 @@ steps:
           --data @payload.json \
           "<< parameter.endpoint >>"/api/v2/workspaces/<< parameters.workspace_id >>/configuration-versions
 
-        
         upload_url=$(echo "$config_version" | jq -r '.data.attributes."upload-url"')
         config_id=$(echo "$config_version" | jq -r '.data.id')
 
@@ -133,8 +132,8 @@ steps:
 
   - run:
       name: Terraform Cloud - Create a new run/plan
-      command: |    
-         
+      command: |
+
         run_id=$(curl --silent \
           --header "Authorization: Bearer << parameter.token >>" \
           --header "Content-Type: application/vnd.api+json" \
@@ -145,9 +144,3 @@ steps:
           )
 
         export RUN_ID="$run_id"
-      
-  
-      
-      
-      
-      

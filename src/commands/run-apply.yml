@@ -1,4 +1,4 @@
-description: Apply the configuration that was previously planned using the run-id. 
+description: Apply the configuration that was previously planned using the run-id.
 
 parameters:
   endpoint:
@@ -10,7 +10,7 @@ parameters:
     description: API token for your Terraform Cloud instance
     type: string
     default: ""
-  
+
   message:
     description: Specifies the message to be associated with this run.
     type: string
@@ -48,7 +48,7 @@ steps:
       {
         "commit": "<< parameter.message >>"
       }
-  
+
   - run:
     name: Apply a Run
     command: |

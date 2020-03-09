@@ -57,12 +57,12 @@ steps:
       shell: /bin/bash
       command: |
 
-        tar -zcf "packaged_config.tar.gz" -C "<< paramter.configuration_path >>" .
+        tar -zcf "packaged_config.tar.gz" -C "<< parameters.configuration_path >>" .
 
   - run:
       name: Create data package configuration version
       command: |
-        cat << EOF >> payload.json
+        cat \<< EOF >> payload.json
         {
           "data": {
             "type": "configuration-versions",
@@ -71,6 +71,7 @@ steps:
             }
           }
         }
+        EOF
 
   - run:
       name: Create a Configuration Version
@@ -81,7 +82,7 @@ steps:
           --header "Content-Type: application/vnd.api+json" \
           --request POST \
           --data @payload.json \
-          "<< parameter.endpoint >>"/api/v2/workspaces/<< parameters.workspace_id >>/configuration-versions
+          "<< parameters.endpoint >>"/api/v2/workspaces/<< parameters.workspace_id >>/configuration-versions
 
         upload_url=$(echo "$config_version" | jq -r '.data.attributes."upload-url"')
         config_id=$(echo "$config_version" | jq -r '.data.id')
@@ -94,7 +95,6 @@ steps:
       name: Upload a Configuration File
       shell: /bin/bash
       command: |
-
         curl --silent \
           --header "Content-Type: application/octet-stream" \
           --request PUT \
@@ -104,7 +104,7 @@ steps:
   - run:
       name: Create data package for triggering run/plan
       command: |
-        cat << EOF >> run_payload.json
+        cat \<< EOF >> run_payload.json
         {
           "data": {
             "attributes": {
@@ -128,17 +128,18 @@ steps:
             }
           }
         }
+        EOF
 
   - run:
       name: Terraform Cloud - Create a new run/plan
       command: |
 
         run_id=$(curl --silent \
-          --header "Authorization: Bearer << parameter.token >>" \
+          --header "Authorization: Bearer << parameters.token >>" \
           --header "Content-Type: application/vnd.api+json" \
           --request POST \
           --data @run_payload \
-          "<< parameter.endpoint >>/api/v2/runs" \
+          "<< parameters.endpoint >>/api/v2/runs" \
           | jq -r '.data.id'
           )
 

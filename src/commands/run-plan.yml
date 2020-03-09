@@ -63,14 +63,14 @@ steps:
     name: Create data package configuration version
     command: |
       cat << EOF >> payload.json
-        {
-          "data": {
-            "type": "configuration-versions",
-            "attributes": {
-              "auto-queue-runs": false
-            }
+      {
+        "data": {
+          "type": "configuration-versions",
+          "attributes": {
+            "auto-queue-runs": false
           }
         }
+      }
       EOF
 
   - run:
@@ -143,4 +143,4 @@ steps:
           | jq -r '.data.id'
           )
 
-        export RUN_ID="$run_id"
+       export RUN_ID="$run_id"

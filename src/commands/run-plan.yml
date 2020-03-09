@@ -60,17 +60,17 @@ steps:
         tar -zcf "packaged_config.tar.gz" -C "<< paramter.configuration_path >>" .
 
   - run:
-    name: Create data package configuration version
-    command: |
-      cat << EOF >> payload.json
-      {
-        "data": {
-          "type": "configuration-versions",
-          "attributes": {
-            "auto-queue-runs": false
+      name: Create data package configuration version
+      command: |
+        cat << EOF >> payload.json
+        {
+          "data": {
+            "type": "configuration-versions",
+            "attributes": {
+              "auto-queue-runs": false
+            }
           }
         }
-      }
 
   - run:
       name: Create a Configuration Version

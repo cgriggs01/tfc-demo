@@ -1,0 +1,63 @@
+description: >
+  Apply the configuration that was previously planned using the run-id.
+
+parameters:
+  endpoint:
+    type: string
+    default: "https://app.terraform.io"
+    description: URL address of the Terraform Enterprise instance
+
+  token:
+    type: string
+    default: ""
+    description: API token for your Terraform Cloud instance
+
+  message:
+    type: string
+    default: "Queued from CircleCI via the Terraform Cloud API"
+    description: Specifies the message to be associated with this run.
+
+
+  is-destroy:
+    type: boolean
+    default: false
+    description: Specifies if this plan is a destroy plan, which will destroy all provisioned resources.
+
+  configuration-version:
+    type: string
+    default: ""
+    description: Specifies the `configuration` version to use for this run. If the configuration-version object is omitted, the run will be created using the workspace's latest configuration version.
+
+steps:
+  - run:
+      name: Provide error if non-bash shell
+      shell: /bin/bash
+      command: |
+        if [ ! -x /bin/bash ]; then
+          echo Bash not installed.
+          exit 1
+        fi
+  - run:
+      name: Provide error if cURL is not installed.
+      command: |
+        which curl > curl_exists; echo $? | grep -q '1' && echo curl not installed && rm curl_exists && exit 1
+        rm curl_exists
+
+  - run:
+      name: Create data package with commit message
+      shell: /bin/bash
+      command: |
+        cat << "EOF" >> apply_payload.json
+        {
+          "commit": "<< parameter.message >>"
+        }
+
+  - run:
+      name: Apply a Run
+      command: |
+        curl \
+          --header "Authorization: Bearer << parameter.token >>" \
+          --header "Content-Type: application/vnd.api+json" \
+          --request POST \
+          --data @payload.json \
+          << parameters.endpoint >>/api/v2/runs/"$RUN_ID"/actions/apply

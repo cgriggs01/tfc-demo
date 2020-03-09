@@ -49,14 +49,15 @@ steps:
       command: |
         cat \<< EOF >> apply_payload.json
         {
-          "commit": "<< parameter.message >>"
+          "commit": "<< parameters.message >>"
         }
+        EOF
 
   - run:
       name: Apply a Run
       command: |
         curl \
-          --header "Authorization: Bearer << parameter.token >>" \
+          --header "Authorization: Bearer << parameters.token >>" \
           --header "Content-Type: application/vnd.api+json" \
           --request POST \
           --data @payload.json \
